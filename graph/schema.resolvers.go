@@ -15,6 +15,14 @@ import (
 	"github.com/fess932/hsng/graph/model"
 )
 
+func (r *messageResolver) Sender(ctx context.Context, obj *model.Message) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *messageResolver) Reciver(ctx context.Context, obj *model.Message) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
 	todo := &model.Todo{
 		Text:   input.Text,
@@ -27,12 +35,9 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 
 func (r *mutationResolver) SendMessage(ctx context.Context, input model.NewMessage) (*model.Message, error) {
 	message := &model.Message{
-		Text:   input.Text,
-		Sender: nil,
-		Reciver: &model.User{
-			ID:   input.ReciverID,
-			Name: "",
-		},
+		Text:      input.Text,
+		SenderID:  "expapmle",
+		ReciverID: "exapmle",
 	}
 
 	r.messager.SendMessage(message)
@@ -83,6 +88,9 @@ func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, 
 	return &model.User{ID: obj.UserID, Name: "user " + obj.UserID}, nil
 }
 
+// Message returns generated.MessageResolver implementation.
+func (r *Resolver) Message() generated.MessageResolver { return &messageResolver{r} }
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -95,6 +103,7 @@ func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subsc
 // Todo returns generated.TodoResolver implementation.
 func (r *Resolver) Todo() generated.TodoResolver { return &todoResolver{r} }
 
+type messageResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type subscriptionResolver struct{ *Resolver }

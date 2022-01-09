@@ -23,8 +23,8 @@ input NewTodo {
 # MESSAGE
 type Message {
   text: String!
-  sender: User
-  reciver: User
+  sender: User!
+  reciver: User!
 }
 
 input NewMessage {

@@ -2,12 +2,6 @@
 
 package model
 
-type Message struct {
-	Text    string `json:"text"`
-	Sender  *User  `json:"sender"`
-	Reciver *User  `json:"reciver"`
-}
-
 type NewMessage struct {
 	Text      string `json:"text"`
 	ReciverID string `json:"reciverID"`

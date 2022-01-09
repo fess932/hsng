@@ -3,6 +3,7 @@ package graph
 //go:generate go run github.com/99designs/gqlgen
 
 import (
+	"context"
 	"github.com/fess932/hsng/graph/model"
 	"github.com/fess932/hsng/message"
 )
@@ -23,8 +24,8 @@ type Messager interface {
 	Unsubscribe(string)
 }
 
-func NewResolver() *Resolver {
+func NewResolver(ctx context.Context) *Resolver {
 	return &Resolver{
-		messager: message.New(),
+		messager: message.New(ctx),
 	}
 }
