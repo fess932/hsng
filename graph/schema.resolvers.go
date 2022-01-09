@@ -6,10 +6,13 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
+	"strconv"
+	"time"
 
-	"github.com/fess932/gqlgen-todos/graph/generated"
-	"github.com/fess932/gqlgen-todos/graph/model"
+	"github.com/fess932/hsng/graph/generated"
+	"github.com/fess932/hsng/graph/model"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
@@ -22,12 +25,58 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	return todo, nil
 }
 
+func (r *mutationResolver) SendMessage(ctx context.Context, input model.NewMessage) (*model.Message, error) {
+	message := &model.Message{
+		Text:   input.Text,
+		Sender: nil,
+		Reciver: &model.User{
+			ID:   input.ReciverID,
+			Name: "",
+		},
+	}
+
+	r.messager.SendMessage(message)
+
+	return message, nil
+}
+
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 	return r.todos, nil
 }
 
-func (r *queryResolver) Friends(ctx context.Context) ([]*model.User, error) {
-	return r.friends, nil
+func (r *queryResolver) Messages(ctx context.Context) ([]*model.Message, error) {
+	return r.messager.GetMessages(), nil
+}
+
+func (r *subscriptionResolver) LastTodo(ctx context.Context) (<-chan *model.Todo, error) {
+	ch := make(chan *model.Todo)
+
+	go func(ch chan *model.Todo) {
+		t := time.NewTicker(time.Second * 3)
+
+		for v := range t.C {
+			ch <- &model.Todo{
+				ID:   "123",
+				Text: "time: " + v.String(),
+			}
+		}
+
+	}(ch)
+
+	return ch, nil
+}
+
+func (r *subscriptionResolver) LastMessage(ctx context.Context) (<-chan *model.Message, error) {
+	userID := strconv.Itoa(rand.Int())
+
+	go func(ctx context.Context) {
+		select {
+		case <-ctx.Done():
+			log.Println("CONTEXT LAST MESSAGE DONE")
+			r.messager.Unsubscribe(userID)
+		}
+	}(ctx)
+	return r.messager.Subscribe(userID), nil
 }
 
 func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
@@ -40,9 +89,13 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Subscription returns generated.SubscriptionResolver implementation.
+func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
+
 // Todo returns generated.TodoResolver implementation.
 func (r *Resolver) Todo() generated.TodoResolver { return &todoResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }
 type todoResolver struct{ *Resolver }

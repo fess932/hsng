@@ -2,6 +2,7 @@
 #
 # https://gqlgen.com/getting-started/
 
+#  TODO_TYPE
 type Todo {
   id: ID!
   text: String!
@@ -14,16 +15,38 @@ type User {
   name: String!
 }
 
-type Query {
-  todos: [Todo!]!
-  friends: [User!]!
-}
-
 input NewTodo {
   text: String!
   userId: String!
 }
 
+# MESSAGE
+type Message {
+  text: String!
+  sender: User
+  reciver: User
+}
+
+input NewMessage {
+  text: String!
+  reciverID: String!
+}
+
+#### methods
+type Query {
+  todos: [Todo!]!
+  messages: [Message!]!
+}
+
 type Mutation {
   createTodo(input: NewTodo!): Todo!
+  sendMessage(input: NewMessage!): Message!
 }
+
+type Subscription {
+  lastTodo: Todo!
+  lastMessage: Message!
+}
+
+
+
