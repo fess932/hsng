@@ -16,11 +16,17 @@ import (
 )
 
 func (r *messageResolver) Sender(ctx context.Context, obj *model.Message) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.User{
+		ID:   "senderID",
+		Name: "reciver name",
+	}, nil
 }
 
 func (r *messageResolver) Reciver(ctx context.Context, obj *model.Message) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.User{
+		ID:   "reciverID",
+		Name: "reciver name",
+	}, nil
 }
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
@@ -51,6 +57,10 @@ func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 
 func (r *queryResolver) Messages(ctx context.Context) ([]*model.Message, error) {
 	return r.messager.GetMessages(), nil
+}
+
+func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
+	return r.user.GetUsers(), nil
 }
 
 func (r *subscriptionResolver) LastTodo(ctx context.Context) (<-chan *model.Todo, error) {

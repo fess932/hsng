@@ -36,6 +36,7 @@ input NewMessage {
 type Query {
   todos: [Todo!]!
   messages: [Message!]!
+  users: [User!]!
 }
 
 type Mutation {

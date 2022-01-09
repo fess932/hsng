@@ -1,17 +1,15 @@
 package message
 
 import (
-	"context"
 	"github.com/fess932/hsng/graph/model"
-	mong "github.com/fess932/hsng/message/repo/mongo"
 )
 
-func New(ctx context.Context) *Messager {
+func New(repo Repo) *Messager {
 	m := &Messager{
 		messages:  []*model.Message{},
 		reciver:   make(chan *model.Message),
 		listeners: map[string]chan *model.Message{},
-		mr:        mong.New(ctx),
+		repo:      repo,
 	}
 
 	go m.messageService() // run message listener
@@ -23,10 +21,10 @@ type Messager struct {
 	reciver   chan *model.Message
 	listeners map[string]chan *model.Message
 	messages  []*model.Message
-	mr        MessagerRepo
+	repo      Repo
 }
 
-type MessagerRepo interface {
+type Repo interface {
 	ReadAllMessages() []*model.Message
 	SaveMessage(message *model.Message)
 }
@@ -58,10 +56,10 @@ func (m Messager) Unsubscribe(userID string) {
 }
 
 func (m Messager) GetMessages() []*model.Message {
-	return m.mr.ReadAllMessages()
+	return m.repo.ReadAllMessages()
 }
 
 func (m Messager) SendMessage(message *model.Message) {
 	m.reciver <- message
-	m.mr.SaveMessage(message)
+	m.repo.SaveMessage(message)
 }
