@@ -3,6 +3,7 @@ export
 
 generate:
 	go run github.com/99designs/gqlgen generate
+	go run .
 
 run:
 	go run .
@@ -10,4 +11,4 @@ run:
 init:
 	go run github.com/99designs/gqlgen init
 
-PHONY: init generate
+PHONY: init generate run

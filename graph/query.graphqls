@@ -1,0 +1,8 @@
+type Query {
+    """
+    Todos!
+    """
+    todos: [Todo!]!
+    messages: [Message!]!
+    users: [User!]!
+}

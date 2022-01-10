@@ -1,0 +1,10 @@
+type Mutation {
+    createTodo(input: NewTodo!): Todo!
+    sendMessage(input: NewMessage!): Message!
+
+    "Sign up ?"
+    createUser(input: NewUser!): User!
+
+    "follow to another user"
+    follow(input: ID): Boolean
+}

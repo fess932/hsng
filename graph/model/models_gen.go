@@ -12,7 +12,13 @@ type NewTodo struct {
 	UserID string `json:"userId"`
 }
 
-type User struct {
-	ID   string `json:"id"`
+type NewUser struct {
 	Name string `json:"name"`
+}
+
+// Users
+type User struct {
+	ID      string  `json:"id"`
+	Name    string  `json:"name"`
+	Friends []*User `json:"friends"`
 }
