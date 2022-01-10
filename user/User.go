@@ -8,8 +8,18 @@ type Usecase struct {
 	repo Repo
 }
 
+func (u Usecase) CreateUser(user *model.User) *model.User {
+	return u.repo.SaveUser(user)
+}
+
+func (u Usecase) AddFriend() (*model.User, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 type Repo interface {
 	GetUser(string) *model.User
+	SaveUser(*model.User) *model.User
 	GetUsers() []*model.User
 }
 

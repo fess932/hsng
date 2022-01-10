@@ -35,11 +35,13 @@ func (r *mutationResolver) SendMessage(ctx context.Context, input model.NewMessa
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.user.CreateUser(&model.User{
+		Name: input.Name,
+	}), nil
 }
 
-func (r *mutationResolver) Follow(ctx context.Context, input *string) (*bool, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) AddFriend(ctx context.Context, input *string) (*model.User, error) {
+	return r.user.AddFriend()
 }
 
 // Mutation returns generated.MutationResolver implementation.

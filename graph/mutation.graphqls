@@ -5,6 +5,6 @@ type Mutation {
     "Sign up ?"
     createUser(input: NewUser!): User!
 
-    "follow to another user"
-    follow(input: ID): Boolean
+    "add another user to friend list, returns updated current user info"
+    addFriend(input: ID): User!
 }

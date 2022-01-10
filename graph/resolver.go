@@ -35,8 +35,10 @@ type Messager interface {
 }
 
 type User interface {
+	CreateUser(*model.User) *model.User
 	GetUser(id string) *model.User
 	GetUsers() []*model.User
+	AddFriend() (*model.User, error)
 }
 
 func NewResolver(ctx context.Context) *Resolver {

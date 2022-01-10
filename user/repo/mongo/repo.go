@@ -15,6 +15,11 @@ type Repo struct {
 	db        *mongo.Database
 }
 
+func (r Repo) SaveUser(user *model.User) *model.User {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (r Repo) GetUsers() []*model.User {
 
 	ctx, cancel := context.WithTimeout(r.context, r.rwTimeout)
